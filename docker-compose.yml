@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      args:
+        user: thielserra
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /var/www/
+    container_name: sblog_app
+    volumes:
+      - ./:/var/www
+    restart: always
+    networks:
+      - network
+
+  nginx:
+    image: nginx:alpine
+    container_name: sblog_nginx
+    restart: always
+    ports:
+      - 8087:80
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/:/etc/nginx/conf.d/
+    networks:
+      - network
+
+  mysql:
+    image: mysql:5.7.22
+    restart: always
+    container_name: sblog_mysql
+    ports:
+      - 3311:3306
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+      - ./docker/mysql/scripts:/home/scripts-db
+    environment:
+      MYSQL_DATABASE: sblog
+      MYSQL_ROOT_PASSWORD: r00t
+      MYSQL_USER: root
+      MYSQL_PASSWORD: r00t
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
