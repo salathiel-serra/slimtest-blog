@@ -16,4 +16,9 @@ class User extends Model
         'confirmation_key', 
         'confirmation_expires' 
     ];
+
+    public function permission()
+    {
+        return $this->hasOne('\App\Models\UserPermission', 'user_id');
+    }
 }

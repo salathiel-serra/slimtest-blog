@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\User;
+use App\Models\UserPermission;
 
 class AuthController extends Controller
 {
@@ -22,13 +24,15 @@ class AuthController extends Controller
         $expirationDate  = new \DateTime(date('d/m/Y H:i:s'));
         $expirationDate->modify('+1 hour');
 
-        User::create([
+        $user = User::create([
             'name'                  => $request->getParam('name'),
             'email'                 => $request->getParam('email'),
             'password'              => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
             'confirmation_key'      => $confirmationKey,
             'confirmation_expires'  => $expirationDate
         ]);
+
+        $user->permission()->create(UserPermission::$defaults);
 
         return $response->withRedirect( $this->container->router->pathFor('auth.login') );
     }
