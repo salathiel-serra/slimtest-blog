@@ -8,11 +8,29 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Slim\App([
     'settings' => [
-        'displayErrorDetails' => true
+        'displayErrorDetails' => true,
+        'db' => [
+            'driver'    => 'mysql',
+            'host'      => 'sblog_mysql',
+            'database'  => 'sblog',
+            'username'  => 'root',
+            'password'  => 'r00t',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => ''
+        ]
     ]
 ]);
 
 $container = $app->getContainer();
+
+// Configurando conexão com banco de dados
+$capsule = new Illuminate\Database\Capsule\Manager;
+$capsule->addConnection($container['settings']['db']);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+
 
 $container['view'] = function($container){
     $view = new Slim\Views\Twig(__DIR__ .'/../resources/views', [
