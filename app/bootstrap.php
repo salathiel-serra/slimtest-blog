@@ -36,6 +36,11 @@ $container['validator'] = function($container){
     return new App\Validation\Validator;
 };
 
+// Adicionando validação para dados registrados
+$container['flash'] = function($container){
+    return new \Slim\Flash\Messages;
+};
+
 $container['view'] = function($container){
     $view = new Slim\Views\Twig(__DIR__ .'/../resources/views', [
         'cache' => false
@@ -45,6 +50,8 @@ $container['view'] = function($container){
         $container->router,
         $container->request->getUri()
     ));
+
+    $view->getEnvironment()->addGlobal("flash", $container->flash);
 
     return $view;
 };
