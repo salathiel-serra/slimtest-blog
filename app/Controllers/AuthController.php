@@ -25,7 +25,7 @@ class AuthController extends Controller
             'email' => v::notEmpty()->noWhitespace()->email(), 
             'password' => v::notEmpty()->noWhitespace()
         ]);
-
+        // var_dump( $validation->failed()); die;
         if ($validation->failed())
             return $response->withRedirect( $this->container->router->pathFor('auth.register') );
 

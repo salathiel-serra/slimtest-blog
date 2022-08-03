@@ -1,6 +1,6 @@
 <?php
 
-session_status();
+session_start();
 
 date_default_timezone_set('America/Fortaleza');
 
@@ -56,5 +56,7 @@ $container['HomeController'] = function($container){
 $container['AuthController'] = function($container){
     return new App\Controllers\AuthController($container);
 };
+
+$app->add(new App\Middleware\DisplayInputErrorsMiddleware($container));
 
 require __DIR__ . '/routes.php';
